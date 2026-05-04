@@ -1,0 +1,24 @@
+# Ambientes Virtuais
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# IDE e Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Flet / Build
+build/
+dist/
+
+# OS
+.DS_Store
+Thumbs.db
