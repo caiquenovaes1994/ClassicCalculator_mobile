@@ -1,4 +1,3 @@
-<!-- markdownlint-disable MD051 -->
 # 🖩 Classic Calculator — Windows 7 Aero Glass Clone
 
 > Uma réplica fiel da Calculadora do **Windows 7** construída com **Python + Flet**, com efeito visual **Aero Glass**, fontes originais e funcionalidade completa.
@@ -57,7 +56,7 @@ O objetivo é preservar a estética **Aero Glass** — com seus gradientes azul-
 ### 🔢 Operações Matemáticas
 
 | Operação | Botão | Teclado |
-| --- | --- | --- |
+|---|---|---|
 | Adição | `+` | `+` |
 | Subtração | `-` | `-` |
 | Multiplicação | `*` | `*` |
@@ -72,7 +71,7 @@ O objetivo é preservar a estética **Aero Glass** — com seus gradientes azul-
 ### 🧠 Gerenciamento de Memória
 
 | Função | Descrição |
-| --- | --- |
+|---|---|
 | `MC` | Limpa o valor salvo na memória |
 | `MR` | Recupera o valor da memória para o display |
 | `MS` | Salva o valor atual do display na memória |
@@ -83,7 +82,7 @@ O objetivo é preservar a estética **Aero Glass** — com seus gradientes azul-
 ### ⌨️ Controles de Tela
 
 | Botão | Teclado | Descrição |
-| --- | --- | --- |
+|---|---|---|
 | `←` | `Backspace` | Apaga o último dígito |
 | `CE` | — | Limpa apenas a entrada atual |
 | `C` | `Esc` / `Delete` | Limpa tudo e reinicia |
@@ -99,7 +98,7 @@ O objetivo é preservar a estética **Aero Glass** — com seus gradientes azul-
 ## 🛠️ Tecnologias
 
 | Tecnologia | Versão | Função |
-| --- | --- | --- |
+|---|---|---|
 | **Python** | 3.12+ | Linguagem principal |
 | **Flet** | 0.84+ | Framework UI multiplataforma |
 | **Segoe UI** | — | Fonte dos botões e menus |
@@ -125,29 +124,6 @@ ClassicCalculator_mobile/
 └── README.md
 ```
 
-### Descrição dos Módulos
-
-#### `calculator_logic.py` — Motor Matemático
-
-Classe `CalculatorLogic` totalmente desacoplada da UI:
-
-- Gerencia o estado da operação em andamento
-- Formata números no padrão brasileiro (`1.234.567,89`)
-- Limite de 16 dígitos (fidelidade ao Windows 7)
-- Tratamento de erros (divisão por zero, entradas inválidas)
-
-#### `components.py` — Componentes de UI
-
-- **`GlassButton`**: Botão com gradiente Aero, hover e feedback de clique
-- **`CalculatorDisplay`**: Visor com fonte Consolas e indicador "M" de memória
-
-#### `main.py` — Aplicação Principal
-
-- Configuração da página e tema
-- Barra de menus nativa (`ft.MenuBar`)
-- Layout assimétrico (botão `0` duplo, botão `=` alto)
-- Mapeamento de eventos de teclado
-
 ---
 
 ## 🚀 Instalação
@@ -165,19 +141,7 @@ Classe `CalculatorLogic` totalmente desacoplada da UI:
 cd ClassicCalculator_mobile
 ```
 
-**2. Crie e ative um ambiente virtual (recomendado):**
-
-```bash
-python -m venv .venv
-
-# Windows
-.\.venv\Scripts\activate
-
-# macOS/Linux
-source .venv/bin/activate
-```
-
-**3. Instale as dependências:**
+**2. Instale as dependências:**
 
 ```bash
 pip install flet
@@ -201,23 +165,15 @@ Para gerar o pacote para dispositivos móveis, utilize o **Flet CLI**:
 
 ```bash
 # Android (.apk)
-flet build apk
-
-# iOS (requer macOS com Xcode)
-flet build ios
-
-# Web
-flet build web
+flet run --android
 ```
-
-> **Nota**: Para build Android, é necessário ter o **Android SDK** configurado. Consulte a [documentação oficial do Flet](https://flet.dev/docs/publish).
 
 ---
 
 ## ⌨️ Atalhos de Teclado
 
 | Tecla | Ação |
-| --- | --- |
+|---|---|
 | `0` – `9` | Inserir dígito |
 | `+` `-` `*` `/` | Operador matemático |
 | `Enter` | Calcular resultado |
@@ -242,7 +198,6 @@ graph TD
 ```
 
 O padrão adotado segue uma arquitetura **MVC simplificada**:
-
 - **Model**: `CalculatorLogic` — toda lógica matemática e de estado
 - **View**: `GlassButton` + `CalculatorDisplay` — componentes visuais puros
 - **Controller**: `CalculatorApp` em `main.py` — orquestra eventos e atualiza a UI
@@ -251,7 +206,7 @@ O padrão adotado segue uma arquitetura **MVC simplificada**:
 
 ## 📄 Licença
 
-Este projeto é de uso pessoal e educacional, desenvolvido como exercício de fidelidade de UI e arquitetura de aplicações Python com Flet.
+Este projeto é de uso pessoal e educacional.
 
 ---
 
@@ -262,8 +217,8 @@ Desenvolvido por **Caique Novaes**.
 - 🐙 GitHub: [caiquenovaes1994](https://github.com/caiquenovaes1994)
 - ✉️ E-mail: <caiquenovaes1994@gmail.com>
 
-Fique à vontade para contribuir, enviar sugestões ou reportar problemas!
-
 ---
 
-Feito com 🐍 Python + ⚡ Flet | Inspirado no Windows 7 Aero Glass
+<div align="center">
+  Feito com 🐍 Python + ⚡ Flet | Inspirado no Windows 7 Aero Glass
+</div>
