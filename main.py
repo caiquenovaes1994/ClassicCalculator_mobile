@@ -1,214 +1,165 @@
 import flet as ft
-from calculator_logic import CalculatorLogic
-from components import GlassButton, CalculatorDisplay
+from calculator_logic import CalculatorState
 
-class CalculatorApp:
-    def __init__(self, page: ft.Page):
-        self.page = page
-        self.logic = CalculatorLogic()
+class GlassButton(ft.Container):
+    def __init__(self, text, on_click, btn_type="number", expand=1):
+        super().__init__()
+        self.expand = expand
+        self.on_click_action = on_click
+        self.btn_text = text
         
-        self.page.fonts = {
-            "Segoe UI": "fonts/SegoeUI.ttf",
-            "Consolas": "fonts/Consolas.ttf" 
-        }
+        self.content = ft.Text(text, size=13, color="#1e395b", font_family="Segoe UI")
+        self.alignment = ft.Alignment(0, 0)
+        self.border_radius = 3
+        self.border = ft.Border.all(1, "#8797b2")
         
-        self.page.title = "Calculadora"
-        # Ajustado para mobile e desktop
-        self.page.window_width = 340
-        self.page.window_height = 560
-        self.page.window_resizable = False
-        self.page.padding = 0 
-        self.page.bgcolor = "#d9e4f1" 
-        
-        self.page.on_keyboard_event = self.handle_keyboard
-        
-        self.display = CalculatorDisplay()
-        
-        self.build_menu()
-        self.build_ui()
-
-    def handle_keyboard(self, e: ft.KeyboardEvent):
-        key = e.key
-        if key in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]:
-            self.button_clicked(key)
-        elif key == "+": self.button_clicked("+")
-        elif key == "-": self.button_clicked("-")
-        elif key == "*": self.button_clicked("*")
-        elif key == "/": self.button_clicked("/")
-        elif key == "Enter" or key == "=": self.button_clicked("=")
-        elif key == "Backspace": self.button_clicked("←")
-        elif key == "Escape" or key == "Delete": self.button_clicked("C")
-        elif key == "," or key == ".": self.button_clicked(",")
-        elif key == "%": self.button_clicked("%")
-
-    def build_menu(self):
-        menu_exibir = ft.SubmenuButton(
-            content=ft.Text("Exibir"),
-            controls=[
-                ft.MenuItemButton(content=ft.Text("Padrão"), leading=ft.Icon(ft.Icons.CHECK)),
-                ft.MenuItemButton(content=ft.Text("Científica")),
-                ft.MenuItemButton(content=ft.Text("Programador")),
-                ft.MenuItemButton(content=ft.Text("Estatística")),
-                ft.Divider(),
-                ft.MenuItemButton(content=ft.Text("Histórico")),
-                ft.MenuItemButton(content=ft.Text("Agrupamento de dígitos"), leading=ft.Icon(ft.Icons.CHECK)),
-            ]
-        )
-
-        menu_editar = ft.SubmenuButton(
-            content=ft.Text("Editar"),
-            controls=[
-                ft.MenuItemButton(
-                    content=ft.Text("Copiar (Ctrl+C)"),
-                    on_click=lambda _: self.page.set_clipboard(self.logic.expression)
-                ),
-                ft.MenuItemButton(
-                    content=ft.Text("Colar (Ctrl+V)"),
-                    on_click=lambda _: self.paste_from_clipboard()
-                ),
-            ]
-        )
-
-        menu_ajuda = ft.SubmenuButton(
-            content=ft.Text("Ajuda"),
-            controls=[
-                ft.MenuItemButton(content=ft.Text("Exibir Ajuda")),
-                ft.Divider(),
-                ft.MenuItemButton(
-                    content=ft.Text("Sobre a Calculadora"),
-                    on_click=self.show_about
-                ),
-            ]
-        )
-
-        self.page.menu_bar = ft.MenuBar(
-            expand=True,
-            style=ft.MenuStyle(
-                bgcolor=ft.Colors.WHITE,
-            ),
-            controls=[menu_exibir, menu_editar, menu_ajuda]
-        )
-
-    def paste_from_clipboard(self):
-        content = self.page.get_clipboard()
-        if content:
-            clean_content = "".join([c for c in content if c.isdigit() or c in ",."])
-            if clean_content:
-                self.logic.expression = clean_content.replace(".", ",")
-                self.display.update_display(self.logic.expression, self.logic.memory_active)
-
-    def show_about(self, e):
-        def close_dlg(e):
-            self.page.dialog.open = False
-            self.page.update()
-
-        self.page.dialog = ft.AlertDialog(
-            title=ft.Text("Sobre a Calculadora"),
-            content=ft.Column([
-                ft.Image(src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Windows_7_logo.svg/1200px-Windows_7_logo.svg.png", width=50),
-                ft.Text("Calculadora Classic (Flet Clone)", weight=ft.FontWeight.BOLD),
-                ft.Text("Inspirado no design Aero Glass do Windows 7."),
-                ft.Text("Versão 1.0.0"),
-            ], tight=True, spacing=10),
-            actions=[ft.TextButton("OK", on_click=close_dlg)],
-            actions_alignment=ft.MainAxisAlignment.END,
-        )
-        self.page.dialog.open = True
-        self.page.update()
-
-    def button_clicked(self, text):
-        if text.isdigit(): self.logic.add_digit(text)
-        elif text == ",": self.logic.add_decimal()
-        elif text == "C": self.logic.clear()
-        elif text == "CE": self.logic.clear_entry()
-        elif text == "←": self.logic.backspace()
-        elif text in ["+", "-", "*", "/"]: self.logic.set_operator(text)
-        elif text == "=": self.logic.calculate()
-        elif text == "%": self.logic.percentage()
-        elif text == "±": self.logic.negate()
-        elif text == "√": self.logic.sqrt()
-        elif text == "1/x": self.logic.reciprocal()
-        elif text == "MC": self.logic.memory_clear()
-        elif text == "MR": self.logic.memory_recall()
-        elif text == "MS": self.logic.memory_store()
-        elif text == "M+": self.logic.memory_add()
-        elif text == "M-": self.logic.memory_subtract()
+        # Gradientes Aero Glass
+        if btn_type == "operator":
+            self.gradient = ft.LinearGradient(
+                begin=ft.Alignment(0, -1), end=ft.Alignment(0, 1),
+                colors=["#f2f5f9", "#d4dfef", "#c9d5e9"], stops=[0, 0.5, 1.0]
+            )
+        else:
+            self.gradient = ft.LinearGradient(
+                begin=ft.Alignment(0, -1), end=ft.Alignment(0, 1),
+                colors=["#ffffff", "#f0f4f9", "#e1e9f3"], stops=[0, 0.5, 1.0]
+            )
             
-        self.display.update_display(
-            self.logic.expression, 
-            memory_active=self.logic.memory_active
-        )
+        self.on_click = self._handle_click
 
-    def build_ui(self):
-        layout = ft.Container(
-            content=ft.Column(
-                expand=True,
-                spacing=6,
-                controls=[
-                    self.display,
-                    ft.Row([
-                        GlassButton("MC", self.button_clicked, btn_type="operator"), 
-                        GlassButton("MR", self.button_clicked, btn_type="operator"), 
-                        GlassButton("MS", self.button_clicked, btn_type="operator"), 
-                        GlassButton("M+", self.button_clicked, btn_type="operator"), 
-                        GlassButton("M-", self.button_clicked, btn_type="operator")
-                    ], expand=1, spacing=6),
-                    ft.Row([
-                        GlassButton("←", self.button_clicked, btn_type="operator"), 
-                        GlassButton("CE", self.button_clicked, btn_type="operator"), 
-                        GlassButton("C", self.button_clicked, btn_type="operator"), 
-                        GlassButton("±", self.button_clicked, btn_type="operator"), 
-                        GlassButton("√", self.button_clicked, btn_type="operator")
-                    ], expand=1, spacing=6),
-                    ft.Row([
-                        GlassButton("7", self.button_clicked), 
-                        GlassButton("8", self.button_clicked), 
-                        GlassButton("9", self.button_clicked), 
-                        GlassButton("/", self.button_clicked, btn_type="operator"), 
-                        GlassButton("%", self.button_clicked, btn_type="operator")
-                    ], expand=1, spacing=6),
-                    ft.Row([
-                        GlassButton("4", self.button_clicked), 
-                        GlassButton("5", self.button_clicked), 
-                        GlassButton("6", self.button_clicked), 
-                        GlassButton("*", self.button_clicked, btn_type="operator"), 
-                        GlassButton("1/x", self.button_clicked, btn_type="operator")
-                    ], expand=1, spacing=6),
-                    ft.Row(
-                        expand=2, 
-                        spacing=6,
-                        vertical_alignment=ft.CrossAxisAlignment.STRETCH,
-                        controls=[
-                            ft.Column(
-                                expand=4,
-                                spacing=6,
-                                controls=[
-                                    ft.Row([
-                                        GlassButton("1", self.button_clicked), 
-                                        GlassButton("2", self.button_clicked), 
-                                        GlassButton("3", self.button_clicked), 
-                                        GlassButton("-", self.button_clicked, btn_type="operator")
-                                    ], expand=1, spacing=6),
-                                    ft.Row([
-                                        GlassButton("0", self.button_clicked, expand=2), 
-                                        GlassButton(",", self.button_clicked), 
-                                        GlassButton("+", self.button_clicked, btn_type="operator")
-                                    ], expand=1, spacing=6),
-                                ]
-                            ),
-                            GlassButton("=", self.button_clicked, expand=1, btn_type="operator")
-                        ]
-                    )
-                ]
-            ),
-            padding=15,
-            expand=True
-        )
+    def _handle_click(self, e):
+        if self.on_click_action:
+            self.on_click_action(self.btn_text)
 
-        self.page.add(layout)
+def show_about_dialog(page: ft.Page):
+    """Exibe o popup de informações do desenvolvedor."""
+    def send_email(e):
+        page.launch_url("mailto:caiquenovaes1994@gmail.com")
+
+    about_dialog = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Sobre a Calculadora", size=16, font_family="Segoe UI"),
+        content=ft.Column([
+            ft.Text("Calculadora Windows 7 Aero (Android)", weight="bold"),
+            ft.Row([
+                ft.Text("Desenvolvido por: ", size=13),
+                ft.GestureDetector(
+                    content=ft.Text(
+                        "Caique", 
+                        size=13, 
+                        color=ft.Colors.BLUE_700, 
+                        weight="bold"
+                    ),
+                    on_tap=send_email,
+                    mouse_cursor=ft.MouseCursor.CLICK
+                ),
+            ], spacing=0),
+            ft.Text("Ano: 2026", size=13),
+        ], tight=True, spacing=10),
+        actions=[
+            ft.TextButton("Fechar", on_click=lambda e: close_dialog(page, about_dialog))
+        ],
+    )
+    page.dialog = about_dialog
+    page.dialog.open = True
+    page.update()
+
+def close_dialog(page, dialog):
+    dialog.open = False
+    page.update()
 
 def main(page: ft.Page):
-    CalculatorApp(page)
+    # Configurações de página e fontes (assets/fonts)
+    page.fonts = {
+        "Segoe UI": "fonts/SegoeUI.ttf", 
+        "Consolas": "fonts/consola.ttf"
+    }
+    page.window_width = 240
+    page.window_height = 400
+    page.window_resizable = False
+    page.padding = 0
+    page.bgcolor = "#d9e4f1"
+
+    calc = CalculatorState()
+
+    # Visor Duplo (Equation Preview + Current Value)
+    equation_text = ft.Text(value="", size=12, color="#707070", font_family="Segoe UI", text_align=ft.TextAlign.RIGHT)
+    display_text = ft.Text(value="0", size=28, font_family="Consolas", color="#000000", text_align=ft.TextAlign.RIGHT)
+    
+    def update_ui():
+        display_text.value = calc.format_display()
+        equation_text.value = calc.equation_preview
+        page.update()
+
+    def on_click(text):
+        try:
+            page.haptic_feedback.vibrate() 
+        except:
+            pass
+            
+        if text.isdigit() or text == ",": calc.add_digit(text)
+        elif text == "←": calc.backspace()
+        elif text == "C": calc.reset()
+        elif text == "CE": calc.clear_entry()
+        elif text in ["+", "-", "*", "/"]: calc.set_operator(text)
+        elif text == "=": calc.calculate()
+        elif text == "±": calc.negate()
+        elif text == "√": calc.sqrt()
+        elif text == "1/x": calc.reciprocal()
+        elif text == "%": calc.percentage()
+        elif text == "MC": calc.memory_clear()
+        elif text == "MR": calc.memory_recall()
+        elif text == "MS": calc.memory_store()
+        elif text == "M+": calc.memory_add()
+        elif text == "M-": calc.memory_subtract()
+        
+        update_ui()
+
+    # Barra de topo minimalista com o link de e-mail integrado no "Sobre"
+    top_bar = ft.Container(
+        content=ft.Row([
+            ft.TextButton(
+                "Sobre", 
+                on_click=lambda _: show_about_dialog(page),
+                style=ft.ButtonStyle(color="#1e395b", text_style=ft.TextStyle(size=11, font_family="Segoe UI"))
+            )
+        ], alignment=ft.MainAxisAlignment.END),
+        padding=ft.Padding(0, 0, 5, 0)
+    )
+
+    # Visor Container
+    display_container = ft.Container(
+        content=ft.Column([equation_text, display_text], spacing=0, horizontal_alignment=ft.CrossAxisAlignment.END),
+        height=70,
+        padding=ft.Padding(10, 5, 10, 5),
+        gradient=ft.LinearGradient(begin=ft.Alignment(0, -1), end=ft.Alignment(0, 1), colors=["#e6eff9", "#ffffff"]),
+        border=ft.Border.all(1, "#8e9cbc"),
+        border_radius=2,
+        alignment=ft.Alignment(1, 1),
+        margin=ft.Margin(0, 0, 0, 10)
+    )
+
+    # Grade de Botões
+    grid = ft.Column(expand=True, spacing=4, controls=[
+        display_container,
+        ft.Row([GlassButton("MC", on_click, "operator"), GlassButton("MR", on_click, "operator"), GlassButton("MS", on_click, "operator"), GlassButton("M+", on_click, "operator"), GlassButton("M-", on_click, "operator")], expand=1, spacing=4),
+        ft.Row([GlassButton("←", on_click, "operator"), GlassButton("CE", on_click, "operator"), GlassButton("C", on_click, "operator"), GlassButton("±", on_click, "operator"), GlassButton("√", on_click, "operator")], expand=1, spacing=4),
+        ft.Row([GlassButton("7", on_click), GlassButton("8", on_click), GlassButton("9", on_click), GlassButton("/", on_click, "operator"), GlassButton("%", on_click, "operator")], expand=1, spacing=4),
+        ft.Row([GlassButton("4", on_click), GlassButton("5", on_click), GlassButton("6", on_click), GlassButton("*", on_click, "operator"), GlassButton("1/x", on_click, "operator")], expand=1, spacing=4),
+        ft.Row(expand=2, spacing=4, controls=[
+            ft.Column(expand=4, spacing=4, controls=[
+                ft.Row([GlassButton("1", on_click), GlassButton("2", on_click), GlassButton("3", on_click), GlassButton("-", on_click, "operator")], expand=1, spacing=4),
+                ft.Row([GlassButton("0", on_click, expand=2), GlassButton(",", on_click), GlassButton("+", on_click, "operator")], expand=1, spacing=4),
+            ]),
+            GlassButton("=", on_click, btn_type="operator", expand=1)
+        ])
+    ])
+
+    page.add(
+        top_bar,
+        ft.Container(content=grid, padding=8, expand=True)
+    )
+    update_ui()
 
 if __name__ == "__main__":
     ft.run(main, assets_dir="assets")

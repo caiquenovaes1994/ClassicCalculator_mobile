@@ -1,217 +1,161 @@
 import math
 
-class CalculatorLogic:
+class CalculatorState:
     def __init__(self):
         self.reset()
         self.memory = 0
         self.memory_active = False
 
     def reset(self):
-        self.expression = "0"
+        self.current_value = "0"
+        self.equation_preview = "" # Novo campo para o preview
+        self.operand_a = None
         self.operator = None
-        self.operand1 = None
         self.new_operand = True
-        self.error = False
 
-    def clear(self):
-        self.reset()
+    def format_display(self, value=None):
+        """Formata o valor para exibição brasileira."""
+        val_str = value if value is not None else self.current_value
+        if val_str == "Error": return "Error"
+        try:
+            val = float(val_str.replace(",", "."))
+            # Formatação brasileira (1.234,56)
+            return f"{val:,.10g}".replace(",", "X").replace(".", ",").replace("X", ".")
+        except:
+            return val_str
 
-    def clear_entry(self):
-        self.expression = "0"
-        self.new_operand = True
+    def add_digit(self, digit: str):
+        if self.new_operand:
+            self.current_value = digit if digit != "," else "0,"
+            self.new_operand = False
+        else:
+            if digit == "," and "," in self.current_value: return
+            if len(self.current_value.replace(",", "")) < 16:
+                self.current_value += digit
 
     def backspace(self):
-        if self.error:
-            self.reset()
-            return
-        
-        if len(self.expression) > 1:
-            self.expression = self.expression[:-1]
-        else:
-            self.expression = "0"
+        if not self.new_operand:
+            self.current_value = self.current_value[:-1]
+            if not self.current_value or self.current_value == "-": 
+                self.current_value = "0"
+                self.new_operand = True
+
+    def set_operator(self, operator: str):
+        try:
+            # Se já houver um operador e um novo operando sendo digitado, apenas troca o operador
+            if self.operator and self.new_operand:
+                self.operator = operator
+                self.equation_preview = f"{self.format_display(str(self.operand_a).replace('.', ','))} {operator}"
+                return
+                
+            self.operand_a = float(self.current_value.replace(",", "."))
+            self.operator = operator
+            # Atualiza o preview com o valor atual e o operador
+            self.equation_preview = f"{self.format_display()} {operator}"
             self.new_operand = True
-
-    def add_digit(self, digit):
-        if self.error:
-            self.reset()
-            
-        if self.new_operand:
-            self.expression = digit
-            self.new_operand = False
-        else:
-            if self.expression == "0":
-                self.expression = digit
-            else:
-                # Limite de 16 dígitos para fidelidade
-                if len(self.expression.replace(",", "").replace(".", "").replace("-", "")) < 16:
-                    self.expression += digit
-
-    def add_decimal(self):
-        if self.error:
-            self.reset()
-            
-        if self.new_operand:
-            self.expression = "0,"
-            self.new_operand = False
-        elif "," not in self.expression:
-            self.expression += ","
-
-    def set_operator(self, operator):
-        if self.error:
-            return
-            
-        if self.operator and not self.new_operand:
-            self.calculate()
-        
-        self.operand1 = self._parse_val(self.expression)
-        self.operator = operator
-        self.new_operand = True
+        except:
+            pass
 
     def calculate(self):
-        if self.error or self.operator is None:
-            return
+        if self.operator and self.operand_a is not None:
+            try:
+                b = float(self.current_value.replace(",", "."))
+                res = 0
+                if self.operator == "+": res = self.operand_a + b
+                elif self.operator == "-": res = self.operand_a - b
+                elif self.operator == "*": res = self.operand_a * b
+                elif self.operator == "/":
+                    if b == 0:
+                        self.current_value = "Error"
+                        self.equation_preview = ""
+                        self.operator = None
+                        self.operand_a = None
+                        self.new_operand = True
+                        return
+                    res = self.operand_a / b
+                
+                self.current_value = str(res).replace(".", ",")
+                self.equation_preview = "" # Limpa o preview após o resultado
+                self.operand_a = None
+                self.operator = None
+                self.new_operand = True
+            except:
+                self.current_value = "Error"
+                self.equation_preview = ""
 
-        try:
-            operand2 = self._parse_val(self.expression)
-            if self.operator == "+":
-                result = self.operand1 + operand2
-            elif self.operator == "-":
-                result = self.operand1 - operand2
-            elif self.operator == "*":
-                result = self.operand1 * operand2
-            elif self.operator == "/":
-                if operand2 == 0:
-                    raise ZeroDivisionError()
-                result = self.operand1 / operand2
-            
-            self.expression = self._format_result(result)
-            self.operator = None
-            self.operand1 = None
-            self.new_operand = True
-        except ZeroDivisionError:
-            self.expression = "Erro: Divisão por zero"
-            self.error = True
-        except Exception:
-            self.expression = "Erro"
-            self.error = True
-
-    def percentage(self):
-        if self.error:
-            return
-        try:
-            val = self._parse_val(self.expression)
-            if self.operand1 is not None:
-                result = self.operand1 * (val / 100)
-                self.expression = self._format_result(result)
-            else:
-                result = val / 100
-                self.expression = self._format_result(result)
-        except Exception:
-            self.expression = "Erro"
-            self.error = True
-
-    def negate(self):
-        if self.error or self.expression == "0":
-            return
-        if self.expression.startswith("-"):
-            self.expression = self.expression[1:]
-        else:
-            self.expression = "-" + self.expression
-
-    def sqrt(self):
-        if self.error: return
-        try:
-            val = self._parse_val(self.expression)
-            if val < 0: raise ValueError()
-            result = math.sqrt(val)
-            self.expression = self._format_result(result)
-            self.new_operand = True
-        except Exception:
-            self.expression = "Entrada inválida"
-            self.error = True
-
-    def reciprocal(self):
-        if self.error: return
-        try:
-            val = self._parse_val(self.expression)
-            if val == 0: raise ZeroDivisionError()
-            result = 1 / val
-            self.expression = self._format_result(result)
-            self.new_operand = True
-        except Exception:
-            self.expression = "Erro: Divisão por zero"
-            self.error = True
-
-    # Memory Functions
+    # Funções de Memória (mantidas)
     def memory_clear(self):
         self.memory = 0
         self.memory_active = False
 
     def memory_recall(self):
-        self.expression = self._format_result(self.memory)
+        self.current_value = str(self.memory).replace(".", ",")
         self.new_operand = True
 
     def memory_store(self):
         try:
-            self.memory = self._parse_val(self.expression)
+            self.memory = float(self.current_value.replace(",", "."))
             self.memory_active = (self.memory != 0)
             self.new_operand = True
-        except Exception:
+        except:
             pass
 
     def memory_add(self):
         try:
-            self.memory += self._parse_val(self.expression)
+            self.memory += float(self.current_value.replace(",", "."))
             self.memory_active = (self.memory != 0)
             self.new_operand = True
-        except Exception:
+        except:
             pass
 
     def memory_subtract(self):
         try:
-            self.memory -= self._parse_val(self.expression)
+            self.memory -= float(self.current_value.replace(",", "."))
             self.memory_active = (self.memory != 0)
             self.new_operand = True
-        except Exception:
-            pass
-
-    # Helpers
-    def _parse_val(self, val_str):
-        try:
-            # Remove pontos de milhar e troca vírgula por ponto
-            clean_str = val_str.replace(".", "").replace(",", ".")
-            return float(clean_str)
         except:
-            return 0.0
-
-    def _format_result(self, val):
-        # Arredondamento para evitar problemas de precisão float
-        if abs(val) < 1e-12: val = 0
-        
-        if val == 0: return "0"
-        
-        # Formatação base
-        if val.is_integer():
-            res = f"{int(val):,}"
+            pass
+            
+    def negate(self):
+        if self.current_value == "0": return
+        if self.current_value.startswith("-"):
+            self.current_value = self.current_value[1:]
         else:
-            # Limite de 12 casas decimais ou notação científica se muito grande/pequeno
-            if abs(val) >= 1e16 or (abs(val) < 1e-12 and val != 0):
-                res = f"{val:.12g}"
-            else:
-                res = f"{val:,.12g}"
-        
-        # Converte formato americano (1,000.5) para brasileiro (1.000,5)
-        # Usamos um placeholder para a troca segura
-        res = res.replace(",", "TEMP").replace(".", ",").replace("TEMP", ".")
-        
-        return res
+            self.current_value = "-" + self.current_value
 
-    def get_display_text(self):
-        # Retorna a expressão formatada com pontos de milhar se for apenas número
-        if self.operator is None and not self.error and "," not in self.expression:
-            try:
-                val = self._parse_val(self.expression)
-                return self._format_result(val)
-            except:
-                return self.expression
-        return self.expression
+    def sqrt(self):
+        try:
+            val = float(self.current_value.replace(",", "."))
+            if val < 0: raise ValueError
+            self.current_value = str(math.sqrt(val)).replace(".", ",")
+            self.new_operand = True
+        except:
+            self.current_value = "Error"
+
+    def reciprocal(self):
+        try:
+            val = float(self.current_value.replace(",", "."))
+            if val == 0: raise ZeroDivisionError
+            self.current_value = str(1/val).replace(".", ",")
+            self.new_operand = True
+        except:
+            self.current_value = "Error"
+
+    def percentage(self):
+        try:
+            val = float(self.current_value.replace(",", "."))
+            if self.operand_a is not None:
+                res = self.operand_a * (val / 100)
+            else:
+                res = val / 100
+            self.current_value = str(res).replace(".", ",")
+            self.new_operand = True
+        except:
+            self.current_value = "Error"
+
+    def clear(self):
+        self.reset()
+
+    def clear_entry(self):
+        self.current_value = "0"
+        self.new_operand = True

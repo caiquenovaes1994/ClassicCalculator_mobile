@@ -8,9 +8,9 @@
 
 ```text
 ┌─────────────────────────────────┐
-│ Exibir  Editar  Ajuda           │  ← Menu nativo
+│                           Sobre │  ← Top bar
 ├─────────────────────────────────┤
-│ M                               │  ← Indicador de memória
+│                             12+ │  ← Equation Preview
 │                        1.234,56 │  ← Display Consolas
 ├────┬────┬────┬────┬────────────-┤
 │ MC │ MR │ MS │ M+ │ M-          │
@@ -29,19 +29,7 @@
 
 ---
 
-## 📋 Índice
 
-- [Sobre o Projeto](#sobre-o-projeto)
-- [Funcionalidades](#funcionalidades)
-- [Tecnologias](#tecnologias)
-- [Estrutura do Projeto](#estrutura-do-projeto)
-- [Instalação](#instalação)
-- [Como Executar](#como-executar)
-- [Build Mobile](#build-mobile)
-- [Atalhos de Teclado](#atalhos-de-teclado)
-- [Arquitetura](#arquitetura)
-
----
 
 ## 📖 Sobre o Projeto
 
@@ -56,7 +44,7 @@ O objetivo é preservar a estética **Aero Glass** — com seus gradientes azul-
 ### 🔢 Operações Matemáticas
 
 | Operação | Botão | Teclado |
-|---|---|---|
+| --- | --- | --- |
 | Adição | `+` | `+` |
 | Subtração | `-` | `-` |
 | Multiplicação | `*` | `*` |
@@ -71,7 +59,7 @@ O objetivo é preservar a estética **Aero Glass** — com seus gradientes azul-
 ### 🧠 Gerenciamento de Memória
 
 | Função | Descrição |
-|---|---|
+| --- | --- |
 | `MC` | Limpa o valor salvo na memória |
 | `MR` | Recupera o valor da memória para o display |
 | `MS` | Salva o valor atual do display na memória |
@@ -82,23 +70,23 @@ O objetivo é preservar a estética **Aero Glass** — com seus gradientes azul-
 ### ⌨️ Controles de Tela
 
 | Botão | Teclado | Descrição |
-|---|---|---|
+| --- | --- | --- |
 | `←` | `Backspace` | Apaga o último dígito |
 | `CE` | — | Limpa apenas a entrada atual |
 | `C` | `Esc` / `Delete` | Limpa tudo e reinicia |
 
-### 🖥️ Interface e Menus
+### 🖥️ Interface e Experiência
 
-- **Menu Exibir**: Seleção de modo (Padrão ativo, Científica, Programador, Estatística)
-- **Menu Editar**: Copiar valor do display e Colar número da área de transferência
-- **Menu Ajuda**: Diálogo "Sobre" com informações da versão
+- **Visor Duplo**: Exibe a equação em andamento (ex: `12 +`) na linha superior e o valor atual na linha inferior.
+- **Haptic Feedback**: Todos os botões disparam uma leve vibração tátil em dispositivos móveis, simulando o clique físico.
+- **Sobre**: Diálogo popup com as informações do desenvolvedor e link de contato direto via e-mail.
 
 ---
 
 ## 🛠️ Tecnologias
 
 | Tecnologia | Versão | Função |
-|---|---|---|
+| --- | --- | --- |
 | **Python** | 3.12+ | Linguagem principal |
 | **Flet** | 0.84+ | Framework UI multiplataforma |
 | **Segoe UI** | — | Fonte dos botões e menus |
@@ -112,13 +100,13 @@ O objetivo é preservar a estética **Aero Glass** — com seus gradientes azul-
 ClassicCalculator_mobile/
 │
 ├── assets/
+│   ├── icon.png                 # Ícone da aplicação mobile
 │   └── fonts/
 │       ├── SegoeUI.ttf          # Fonte dos botões e menus
-│       └── Consolas.ttf         # Fonte do display numérico
+│       └── consola.ttf          # Fonte do display numérico
 │
-├── calculator_logic.py          # Motor matemático (CalculatorLogic)
-├── components.py                # Componentes reutilizáveis (GlassButton, Display)
-├── main.py                      # Ponto de entrada, layout e menus
+├── calculator_logic.py          # Motor matemático (CalculatorState)
+├── main.py                      # Ponto de entrada e interface de usuário
 │
 ├── ROADMAP_CLASSIC_CALCULATOR_MOBILE.md
 └── README.md
@@ -173,7 +161,7 @@ flet run --android
 ## ⌨️ Atalhos de Teclado
 
 | Tecla | Ação |
-|---|---|
+| --- | --- |
 | `0` – `9` | Inserir dígito |
 | `+` `-` `*` `/` | Operador matemático |
 | `Enter` | Calcular resultado |
@@ -188,19 +176,20 @@ flet run --android
 
 ```mermaid
 graph TD
-    A[main.py - CalculatorApp] -->|instancia| B[CalculatorLogic]
-    A -->|renderiza| C[CalculatorDisplay]
+    A[main.py] -->|instancia| B[CalculatorState]
+    A -->|renderiza| C[Visor Duplo e Top Bar]
     A -->|renderiza| D[GlassButton x N]
     D -->|on_click| A
     A -->|chama métodos| B
     B -->|retorna estado| A
-    A -->|update_display| C
+    A -->|update_ui| C
 ```
 
 O padrão adotado segue uma arquitetura **MVC simplificada**:
-- **Model**: `CalculatorLogic` — toda lógica matemática e de estado
-- **View**: `GlassButton` + `CalculatorDisplay` — componentes visuais puros
-- **Controller**: `CalculatorApp` em `main.py` — orquestra eventos e atualiza a UI
+
+- **Model**: `CalculatorState` — toda lógica matemática, formatação brasileira e preview de equação.
+- **View**: `GlassButton` + Visor — componentes visuais puros definidos no `main.py`.
+- **Controller**: Eventos de `on_click` em `main.py` — orquestra eventos, haptic feedback e atualiza a UI.
 
 ---
 
@@ -219,6 +208,4 @@ Desenvolvido por **Caique Novaes**.
 
 ---
 
-<div align="center">
-  Feito com 🐍 Python + ⚡ Flet | Inspirado no Windows 7 Aero Glass
-</div>
+_Feito com 🐍 Python + ⚡ Flet | Inspirado no Windows 7 Aero Glass_
