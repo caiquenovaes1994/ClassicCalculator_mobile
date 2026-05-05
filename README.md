@@ -29,8 +29,6 @@
 
 ---
 
-
-
 ## 📖 Sobre o Projeto
 
 Este projeto é uma **réplica pixel-perfect** da Calculadora clássica do Windows 7, reconstruída do zero com **Python** e o framework **Flet** para rodar nativamente em **Android**, **iOS** e **Desktop**.
@@ -208,4 +206,4 @@ Desenvolvido por **Caique Novaes**.
 
 ---
 
-_Feito com 🐍 Python + ⚡ Flet | Inspirado no Windows 7 Aero Glass_
+Feito com 🐍 Python + ⚡ Flet | Inspirado no Windows 7 Aero Glass
