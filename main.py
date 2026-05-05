@@ -70,14 +70,14 @@ def close_dialog(page, dialog):
 
 def main(page: ft.Page):
     # Configurações de página e fontes (assets/fonts)
-    page.fonts = {
-        "Segoe UI": "fonts/SegoeUI.ttf", 
-        "Consolas": "fonts/consola.ttf"
-    }
-    page.window_width = 240
-    page.window_height = 400
+    page.fonts = {"Segoe UI": "/fonts/SegoeUI.ttf", "Consolas": "/fonts/consola.ttf"}
+    page.window_width = 230
+    page.window_height = 360
     page.window_resizable = False
-    page.padding = 0
+    
+    # AJUSTE AQUI: Adicionamos o padding superior para desviar do entalhe
+    page.padding = ft.Padding.only(top=45, left=0, right=0, bottom=0) 
+    
     page.bgcolor = "#d9e4f1"
 
     calc = CalculatorState()
@@ -115,16 +115,20 @@ def main(page: ft.Page):
         
         update_ui()
 
-    # Barra de topo minimalista com o link de e-mail integrado no "Sobre"
+    # Barra de topo minimalista ajustada para o Android
     top_bar = ft.Container(
         content=ft.Row([
             ft.TextButton(
                 "Sobre", 
                 on_click=lambda _: show_about_dialog(page),
-                style=ft.ButtonStyle(color="#1e395b", text_style=ft.TextStyle(size=11, font_family="Segoe UI"))
+                style=ft.ButtonStyle(
+                    color="#1e395b", 
+                    text_style=ft.TextStyle(size=12, font_family="Segoe UI")
+                )
             )
         ], alignment=ft.MainAxisAlignment.END),
-        padding=ft.Padding(0, 0, 5, 0)
+        padding=ft.Padding.only(right=15), # Afasta levemente da borda direita
+        height=40 # Altura fixa para manter a proporção Aero
     )
 
     # Visor Container
@@ -162,4 +166,4 @@ def main(page: ft.Page):
     update_ui()
 
 if __name__ == "__main__":
-    ft.run(main, assets_dir="assets")
+    ft.app(target=main, assets_dir="assets")

@@ -1,0 +1,1 @@
+flet build apk --project "Calculadora Win7" --org com.caiquenovaes.calc --product "Calculadora Aero7"
