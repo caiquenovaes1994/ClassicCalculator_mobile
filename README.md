@@ -240,14 +240,10 @@ Distribuição comercial não autorizada sem consentimento prévio do autor.
 
 ## 👨‍💻 Autor
 
-<table>
-  <tr>
-    <td align="center">
-      <strong>Caique Novaes</strong><br/>
-      <a href="https://github.com/caiquenovaes1994">GitHub</a> · <a href="mailto:caiquenovaes1994@gmail.com">E-mail</a>
-    </td>
-  </tr>
-</table>
+**Caique Novaes**
+
+[![GitHub](https://img.shields.io/badge/GitHub-caiquenovaes1994-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/caiquenovaes1994)
+[![E-mail](https://img.shields.io/badge/E--mail-caiquenovaes1994%40gmail.com-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:caiquenovaes1994@gmail.com)
 
 ---
 
