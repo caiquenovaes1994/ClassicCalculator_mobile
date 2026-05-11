@@ -33,8 +33,8 @@ class GlassButton(ft.Container):
 
 def show_about_dialog(page: ft.Page):
     """Exibe o popup de informações do desenvolvedor."""
-    def send_email(e):
-        page.launch_url("mailto:caiquenovaes1994@gmail.com")
+    async def send_email(e):
+        await page.launch_url("mailto:caiquenovaes1994@gmail.com")
 
     about_dialog = ft.AlertDialog(
         modal=True,
@@ -60,8 +60,9 @@ def show_about_dialog(page: ft.Page):
             ft.TextButton("Fechar", on_click=lambda e: close_dialog(page, about_dialog))
         ],
     )
+    
     page.dialog = about_dialog
-    page.dialog.open = True
+    about_dialog.open = True
     page.update()
 
 def close_dialog(page, dialog):
@@ -166,4 +167,5 @@ def main(page: ft.Page):
     update_ui()
 
 if __name__ == "__main__":
-    ft.app(target=main, assets_dir="assets")
+    # ft.run substitui o ft.app nas versões recentes
+    ft.run(main)
