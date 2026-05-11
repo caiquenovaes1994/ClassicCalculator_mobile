@@ -31,16 +31,16 @@ class GlassButton(ft.Container):
         if self.on_click_action:
             self.on_click_action(self.btn_text)
 
-def show_about_dialog(page: ft.Page):
+def show_about_dialog(page: ft.Page, url_launcher: ft.UrlLauncher):
     """Exibe o popup de informações do desenvolvedor."""
     async def send_email(e):
-        await page.launch_url("mailto:caiquenovaes1994@gmail.com")
+        await url_launcher.launch_url("mailto:caiquenovaes1994@gmail.com")
 
     about_dialog = ft.AlertDialog(
         modal=True,
         title=ft.Text("Sobre a Calculadora", size=16, font_family="Segoe UI"),
         content=ft.Column([
-            ft.Text("Calculadora Windows 7 Aero (Android)", weight="bold"),
+            ft.Text("Calculadora Windows 7 Aero (Android)", weight=ft.FontWeight.BOLD),
             ft.Row([
                 ft.Text("Desenvolvido por: ", size=13),
                 ft.GestureDetector(
@@ -48,7 +48,7 @@ def show_about_dialog(page: ft.Page):
                         "Caique", 
                         size=13, 
                         color=ft.Colors.BLUE_700, 
-                        weight="bold"
+                        weight=ft.FontWeight.BOLD
                     ),
                     on_tap=send_email,
                     mouse_cursor=ft.MouseCursor.CLICK
@@ -61,25 +61,26 @@ def show_about_dialog(page: ft.Page):
         ],
     )
     
-    page.dialog = about_dialog
-    about_dialog.open = True
-    page.update()
+    page.show_dialog(about_dialog)
 
 def close_dialog(page, dialog):
-    dialog.open = False
-    page.update()
+    page.pop_dialog()
 
 def main(page: ft.Page):
     # Configurações de página e fontes (assets/fonts)
     page.fonts = {"Segoe UI": "/fonts/SegoeUI.ttf", "Consolas": "/fonts/consola.ttf"}
-    page.window_width = 230
-    page.window_height = 360
-    page.window_resizable = False
+    page.window.width = 230
+    page.window.height = 360
+    page.window.resizable = False
     
     # AJUSTE AQUI: Adicionamos o padding superior para desviar do entalhe
     page.padding = ft.Padding.only(top=45, left=0, right=0, bottom=0) 
     
     page.bgcolor = "#d9e4f1"
+
+    # Launcher para links/email
+    url_launcher = ft.UrlLauncher()
+    page.overlay.append(url_launcher)
 
     calc = CalculatorState()
 
@@ -94,7 +95,9 @@ def main(page: ft.Page):
 
     def on_click(text):
         try:
-            page.haptic_feedback.vibrate() 
+            # Haptic feedback might be moved or unavailable in this Flet version
+            if hasattr(page, "haptic_feedback"):
+                page.haptic_feedback.vibrate()
         except:
             pass
             
@@ -121,7 +124,7 @@ def main(page: ft.Page):
         content=ft.Row([
             ft.TextButton(
                 "Sobre", 
-                on_click=lambda _: show_about_dialog(page),
+                on_click=lambda _: show_about_dialog(page, url_launcher),
                 style=ft.ButtonStyle(
                     color="#1e395b", 
                     text_style=ft.TextStyle(size=12, font_family="Segoe UI")
