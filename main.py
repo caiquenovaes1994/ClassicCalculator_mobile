@@ -34,7 +34,7 @@ class GlassButton(ft.Container):
 def show_about_dialog(page: ft.Page):
     """Exibe o popup de informações do desenvolvedor."""
     async def send_email(e):
-        await page.launch_url("mailto:caiquenovaes1994@gmail.com")
+        await page.launch_url("mailto:caiquenovaes1994@gmail.com") # type: ignore
 
     about_dialog = ft.AlertDialog(
         modal=True,
