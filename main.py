@@ -31,40 +31,41 @@ class GlassButton(ft.Container):
         if self.on_click_action:
             self.on_click_action(self.btn_text)
 
-def show_about_dialog(page: ft.Page, url_launcher: ft.UrlLauncher):
+def show_about_dialog(page: ft.Page):
     """Exibe o popup de informações do desenvolvedor."""
     async def send_email(e):
-        await url_launcher.launch_url("mailto:caiquenovaes1994@gmail.com")
+        await page.launch_url("mailto:caiquenovaes1994@gmail.com")
 
     about_dialog = ft.AlertDialog(
         modal=True,
-        title=ft.Text("Sobre a Calculadora", size=16, font_family="Segoe UI"),
-        content=ft.Column([
-            ft.Text("Calculadora Windows 7 Aero (Android)", weight=ft.FontWeight.BOLD),
-            ft.Row([
-                ft.Text("Desenvolvido por: ", size=13),
-                ft.GestureDetector(
-                    content=ft.Text(
-                        "Caique", 
-                        size=13, 
-                        color=ft.Colors.BLUE_700, 
-                        weight=ft.FontWeight.BOLD
-                    ),
-                    on_tap=send_email,
-                    mouse_cursor=ft.MouseCursor.CLICK
+        title=ft.Text("Sobre a Calculadora", size=13, font_family="Segoe UI", text_align=ft.TextAlign.CENTER),
+        content=ft.Container(
+            content=ft.Column([
+                ft.Text("Calculadora Windows 7 Aero", weight=ft.FontWeight.BOLD, size=11, text_align=ft.TextAlign.CENTER),
+                ft.Text("(Android Version)", size=10, italic=True, text_align=ft.TextAlign.CENTER),
+                ft.Container(height=5), # Espaço solicitado entre Versão e Desenvolvedor
+                ft.Text(
+                    text_align=ft.TextAlign.CENTER,
+                    spans=[
+                        ft.TextSpan("Desenvolvido por: ", style=ft.TextStyle(size=10, color=ft.Colors.BLACK)),
+                        ft.TextSpan(
+                            "Caique Novaes",
+                            style=ft.TextStyle(size=10, color=ft.Colors.BLUE_700, weight=ft.FontWeight.BOLD),
+                            on_click=send_email
+                        )
+                    ]
                 ),
-            ], spacing=0),
-            ft.Text("Ano: 2026", size=13),
-        ], tight=True, spacing=10),
-        actions=[
-            ft.TextButton("Fechar", on_click=lambda e: close_dialog(page, about_dialog))
-        ],
+                ft.Text("Ano: 2026", size=10, text_align=ft.TextAlign.CENTER),
+                ft.Container(height=2), # Espaço extra reduzido
+                ft.TextButton("Fechar", on_click=lambda e: page.pop_dialog())
+            ], tight=True, spacing=6, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+            width=180,
+            padding=ft.Padding(0, 5, 0, 0)
+        )
     )
     
     page.show_dialog(about_dialog)
 
-def close_dialog(page, dialog):
-    page.pop_dialog()
 
 def main(page: ft.Page):
     # Configurações de página e fontes (assets/fonts)
@@ -74,13 +75,9 @@ def main(page: ft.Page):
     page.window.resizable = False
     
     # AJUSTE AQUI: Adicionamos o padding superior para desviar do entalhe
-    page.padding = ft.Padding.only(top=45, left=0, right=0, bottom=0) 
+    page.padding = ft.Padding.only(top=30, left=0, right=0, bottom=0) 
     
     page.bgcolor = "#d9e4f1"
-
-    # Launcher para links/email
-    url_launcher = ft.UrlLauncher()
-    page.overlay.append(url_launcher)
 
     calc = CalculatorState()
 
@@ -124,7 +121,7 @@ def main(page: ft.Page):
         content=ft.Row([
             ft.TextButton(
                 "Sobre", 
-                on_click=lambda _: show_about_dialog(page, url_launcher),
+                on_click=lambda _: show_about_dialog(page),
                 style=ft.ButtonStyle(
                     color="#1e395b", 
                     text_style=ft.TextStyle(size=12, font_family="Segoe UI")
