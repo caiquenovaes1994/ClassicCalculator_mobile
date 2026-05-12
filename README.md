@@ -173,7 +173,6 @@ ClassicCalculator_mobile/
 
 ---
 
-
 ## 📱 Build para Android (APK)
 
 Para gerar o pacote `.apk` para dispositivos Android, utilize o **Flet CLI**:
