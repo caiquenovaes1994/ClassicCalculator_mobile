@@ -173,21 +173,6 @@ ClassicCalculator_mobile/
 
 ---
 
-## 📱 Build para Android (APK)
-
-Para gerar o pacote `.apk` para dispositivos Android, utilize o **Flet CLI**:
-
-```bash
-flet build apk \
-  --project "Calculadora Win7" \
-  --org com.caiquenovaes.calc \
-  --product "Calculadora Aero7"
-```
-
-> **Nota:** Certifique-se de ter o [Android SDK](https://developer.android.com/studio) e as dependências do Flet build configuradas corretamente.
-
----
-
 ## ⌨️ Atalhos de Teclado
 
 | Tecla | Ação |
