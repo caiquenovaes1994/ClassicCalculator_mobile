@@ -6,13 +6,14 @@
 
 <p align="center">
   <strong>Réplica fiel da Calculadora do Windows 7 construída com Python + Flet</strong><br/>
-  Efeito visual Aero Glass · Fontes originais · Multiplataforma
+  Efeito visual Aero Glass · Fontes originais · Android
 </p>
 
 <p align="center">
   <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/Python-3.12%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.12+"/></a>&nbsp;
   <a href="https://flet.dev/"><img src="https://img.shields.io/badge/Flet-0.84%2B-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flet 0.84+"/></a>&nbsp;
-  <img src="https://img.shields.io/badge/Plataformas-Android%20%7C%20Desktop-34A853?style=for-the-badge&logo=android&logoColor=white" alt="Plataformas"/>&nbsp;
+  <img src="https://img.shields.io/badge/Plataforma-Android-34A853?style=for-the-badge&logo=android&logoColor=white" alt="Plataforma Android"/>&nbsp;
+  <img src="https://img.shields.io/badge/Versão-1.0.0-informational?style=for-the-badge" alt="Versão 1.0.0"/>&nbsp;
   <a href="https://github.com/caiquenovaes1994/ClassicCalculator_mobile"><img src="https://img.shields.io/badge/Licença-Pessoal%20%2F%20Educacional-lightgrey?style=for-the-badge" alt="Licença"/></a>
 </p>
 
@@ -20,7 +21,7 @@
 
 ## 📖 Sobre o Projeto
 
-Este projeto é uma **réplica pixel-perfect** da Calculadora clássica do Windows 7, reconstruída do zero para rodar nativamente em **Android** e **Desktop**.
+Este projeto é uma **réplica pixel-perfect** da Calculadora clássica do Windows 7, reconstruída do zero para rodar nativamente em **Android**.
 
 O objetivo é preservar a estética **Aero Glass** — com seus gradientes azul-acinzentados, bordas sutis e fontes originais (`Segoe UI` e `Consolas`) — enquanto moderniza a base de código com uma arquitetura limpa e modular baseada no padrão MVC.
 
@@ -172,35 +173,6 @@ ClassicCalculator_mobile/
 
 ---
 
-## 🚀 Instalação e Execução
-
-### Pré-requisitos
-
-- [Python 3.12+](https://www.python.org/downloads/) instalado
-- `pip` atualizado (`python -m pip install --upgrade pip`)
-
-### 1. Clone o repositório
-
-```bash
-git clone https://github.com/caiquenovaes1994/ClassicCalculator_mobile.git
-cd ClassicCalculator_mobile
-```
-
-### 2. Instale as dependências
-
-```bash
-pip install flet
-```
-
-### 3. Execute a aplicação
-
-```bash
-python main.py
-```
-
-> A calculadora abrirá em uma janela desktop de **340 × 560 px**.
-
----
 
 ## 📱 Build para Android (APK)
 
@@ -228,6 +200,16 @@ flet build apk \
 | `Esc` / `Delete` | Limpar tudo |
 | `,` ou `.` | Separador decimal |
 | `%` | Calcular porcentagem |
+
+---
+
+## 📋 Histórico de Versões
+
+Consulte o arquivo [CHANGELOG.md](./CHANGELOG.md) para o histórico completo de alterações por versão.
+
+| Versão | Data | Descrição |
+| :---: | :---: | :--- |
+| [**1.0.0**](./CHANGELOG.md#100--2026-05-12) | 2026-05-12 | Lançamento inicial — Interface Aero Glass, motor matemático completo, suporte a Android |
 
 ---
 
