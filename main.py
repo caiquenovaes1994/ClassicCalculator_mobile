@@ -34,7 +34,11 @@ class GlassButton(ft.Container):
 def show_about_dialog(page: ft.Page):
     """Exibe o popup de informações do desenvolvedor."""
     async def send_email(e):
-        await page.launch_url("mailto:caiquenovaes1994@gmail.com") # type: ignore
+        await page.launch_url("mailto:caiquenovaes1994@gmail.com")
+
+    async def close_dialog(e):
+        about_dialog.open = False
+        page.update()
 
     about_dialog = ft.AlertDialog(
         modal=True,
@@ -43,7 +47,7 @@ def show_about_dialog(page: ft.Page):
             content=ft.Column([
                 ft.Text("Calculadora Windows 7 Aero", weight=ft.FontWeight.BOLD, size=11, text_align=ft.TextAlign.CENTER),
                 ft.Text("(Android Version)", size=10, italic=True, text_align=ft.TextAlign.CENTER),
-                ft.Container(height=5), # Espaço solicitado entre Versão e Desenvolvedor
+                ft.Container(height=5),
                 ft.Text(
                     text_align=ft.TextAlign.CENTER,
                     spans=[
@@ -56,8 +60,8 @@ def show_about_dialog(page: ft.Page):
                     ]
                 ),
                 ft.Text("Ano: 2026", size=10, text_align=ft.TextAlign.CENTER),
-                ft.Container(height=2), # Espaço extra reduzido
-                ft.TextButton("Fechar", on_click=lambda e: page.pop_dialog())
+                ft.Container(height=2),
+                ft.TextButton("Fechar", on_click=close_dialog)
             ], tight=True, spacing=6, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
             width=180,
             padding=ft.Padding(0, 5, 0, 0)
@@ -68,20 +72,17 @@ def show_about_dialog(page: ft.Page):
 
 
 def main(page: ft.Page):
-    # Configurações de página e fontes (assets/fonts)
+    # Configurações de página e fontes
     page.fonts = {"Segoe UI": "/fonts/SegoeUI.ttf", "Consolas": "/fonts/consola.ttf"}
     page.window.width = 230
     page.window.height = 360
     page.window.resizable = False
-    
-    # AJUSTE AQUI: Adicionamos o padding superior para desviar do entalhe
     page.padding = ft.Padding.only(top=30, left=0, right=0, bottom=0) 
-    
     page.bgcolor = "#d9e4f1"
 
     calc = CalculatorState()
 
-    # Visor Duplo (Equation Preview + Current Value)
+    # Visor Duplo
     equation_text = ft.Text(value="", size=12, color="#707070", font_family="Segoe UI", text_align=ft.TextAlign.RIGHT)
     display_text = ft.Text(value="0", size=28, font_family="Consolas", color="#000000", text_align=ft.TextAlign.RIGHT)
     
@@ -91,28 +92,33 @@ def main(page: ft.Page):
         page.update()
 
     def on_click(text):
-        try:
-            # Haptic feedback might be moved or unavailable in this Flet version
-            if hasattr(page, "haptic_feedback"):
-                page.haptic_feedback.vibrate()
-        except:
-            pass
+        # Feedback tátil simplificado
+        if hasattr(page, "haptic_feedback"):
+            try: page.haptic_feedback.vibrate()
+            except: pass
             
-        if text.isdigit() or text == ",": calc.add_digit(text)
-        elif text == "←": calc.backspace()
-        elif text == "C": calc.reset()
-        elif text == "CE": calc.clear_entry()
-        elif text in ["+", "-", "*", "/"]: calc.set_operator(text)
-        elif text == "=": calc.calculate()
-        elif text == "±": calc.negate()
-        elif text == "√": calc.sqrt()
-        elif text == "1/x": calc.reciprocal()
-        elif text == "%": calc.percentage()
-        elif text == "MC": calc.memory_clear()
-        elif text == "MR": calc.memory_recall()
-        elif text == "MS": calc.memory_store()
-        elif text == "M+": calc.memory_add()
-        elif text == "M-": calc.memory_subtract()
+        actions = {
+            "←": calc.backspace,
+            "C": calc.reset,
+            "CE": calc.clear_entry,
+            "=": calc.calculate,
+            "±": calc.negate,
+            "√": calc.sqrt,
+            "1/x": calc.reciprocal,
+            "%": calc.percentage,
+            "MC": calc.memory_clear,
+            "MR": calc.memory_recall,
+            "MS": calc.memory_store,
+            "M+": calc.memory_add,
+            "M-": calc.memory_subtract,
+        }
+
+        if text.isdigit() or text == ",":
+            calc.add_digit(text)
+        elif text in ["+", "-", "*", "/"]:
+            calc.set_operator(text)
+        elif text in actions:
+            actions[text]()
         
         update_ui()
 

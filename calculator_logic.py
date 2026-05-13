@@ -3,7 +3,7 @@ import math
 class CalculatorState:
     def __init__(self):
         self.reset()
-        self.memory = 0
+        self.memory = 0.0
         self.memory_active = False
 
     def reset(self):
@@ -85,7 +85,7 @@ class CalculatorState:
 
     # Funções de Memória (mantidas)
     def memory_clear(self):
-        self.memory = 0
+        self.memory = 0.0
         self.memory_active = False
 
     def memory_recall(self):
@@ -95,7 +95,7 @@ class CalculatorState:
     def memory_store(self):
         try:
             self.memory = float(self.current_value.replace(",", "."))
-            self.memory_active = (self.memory != 0)
+            self.memory_active = (self.memory != 0.0)
             self.new_operand = True
         except:
             pass
@@ -103,7 +103,7 @@ class CalculatorState:
     def memory_add(self):
         try:
             self.memory += float(self.current_value.replace(",", "."))
-            self.memory_active = (self.memory != 0)
+            self.memory_active = (self.memory != 0.0)
             self.new_operand = True
         except:
             pass
@@ -111,7 +111,7 @@ class CalculatorState:
     def memory_subtract(self):
         try:
             self.memory -= float(self.current_value.replace(",", "."))
-            self.memory_active = (self.memory != 0)
+            self.memory_active = (self.memory != 0.0)
             self.new_operand = True
         except:
             pass
@@ -152,9 +152,6 @@ class CalculatorState:
             self.new_operand = True
         except:
             self.current_value = "Error"
-
-    def clear(self):
-        self.reset()
 
     def clear_entry(self):
         self.current_value = "0"
