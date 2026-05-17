@@ -10,11 +10,12 @@
 </p>
 
 <p align="center">
-  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/Python-3.12%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.12+"/></a>&nbsp;
-  <a href="https://flet.dev/"><img src="https://img.shields.io/badge/Flet-0.84%2B-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flet 0.84+"/></a>&nbsp;
-  <img src="https://img.shields.io/badge/Plataforma-Android-34A853?style=for-the-badge&logo=android&logoColor=white" alt="Plataforma Android"/>&nbsp;
-  <img src="https://img.shields.io/badge/Versão-1.0.0-informational?style=for-the-badge" alt="Versão 1.0.0"/>&nbsp;
-  <a href="https://github.com/caiquenovaes1994/ClassicCalculator_mobile"><img src="https://img.shields.io/badge/Licença-Pessoal%20%2F%20Educacional-lightgrey?style=for-the-badge" alt="Licença"/></a>
+  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/Python-3.12%2B-3776AB?style=flat&logo=python&logoColor=white" alt="Python 3.12+"/></a>&nbsp;
+  <a href="https://flet.dev/"><img src="https://img.shields.io/badge/Flet-0.84%2B-02569B?style=flat&logo=flutter&logoColor=white" alt="Flet 0.84+"/></a>&nbsp;
+  <img src="https://img.shields.io/badge/Plataforma-Android-34A853?style=flat&logo=android&logoColor=white" alt="Plataforma Android"/>&nbsp;
+  <img src="https://img.shields.io/badge/Versão-1.0.0-informational?style=flat" alt="Versão 1.0.0"/>&nbsp;
+  <a href="LICENSE"><img src="https://img.shields.io/badge/Licença-MIT-brightgreen?style=flat" alt="Licença MIT"/></a>&nbsp;
+  <a href="CODE_OF_CONDUCT.md"><img src="https://img.shields.io/badge/Código_de_Conduta-Contributor_Covenant-ff69b4?style=flat" alt="Código de Conduta"/></a>
 </p>
 
 ---
@@ -199,8 +200,8 @@ Consulte o arquivo [CHANGELOG.md](./CHANGELOG.md) para o histórico completo de 
 
 ## 📄 Licença
 
-Este projeto é de uso **pessoal e educacional**.  
-Distribuição comercial não autorizada sem consentimento prévio do autor.
+Este projeto está licenciado sob a **Licença MIT**.
+Consulte o arquivo [LICENSE](./LICENSE) para obter mais detalhes.
 
 ---
 
@@ -208,8 +209,8 @@ Distribuição comercial não autorizada sem consentimento prévio do autor.
 
 **Caique Novaes**
 
-[![GitHub](https://img.shields.io/badge/GitHub-caiquenovaes1994-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/caiquenovaes1994)
-[![E-mail](https://img.shields.io/badge/E--mail-caiquenovaes1994%40gmail.com-EA4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:caiquenovaes1994@gmail.com)
+[![GitHub](https://img.shields.io/badge/GitHub-caiquenovaes1994-181717?style=flat&logo=github&logoColor=white)](https://github.com/caiquenovaes1994)
+[![E-mail](https://img.shields.io/badge/E--mail-caiquenovaes1994%40gmail.com-EA4335?style=flat&logo=gmail&logoColor=white)](mailto:caiquenovaes1994@gmail.com)
 
 ---
 
